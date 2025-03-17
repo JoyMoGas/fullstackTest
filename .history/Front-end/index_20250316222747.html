@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Libros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+        }
+        .card img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista de Libros</h1>
+    <div id="book-list"></div>
+
+    <script>
+        async function fetchBooks() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/get');
+                if (!response.ok) throw new Error('Error al obtener datos');
+                
+                const books = await response.json();
+                const bookList = document.getElementById('book-list');
+
+                books.forEach(book => {
+                    const bookCard = document.createElement('div');
+                    bookCard.classList.add('card');
+                    bookCard.innerHTML = `
+                        <h2>${book.title}</h2>
+                        <p><strong>Autor:</strong> ${book.author}</p>
+                        <img src="${book.image}" alt="${book.title}">
+                    `;
+                    bookList.appendChild(bookCard);
+                });
+            } catch (error) {
+                console.error('Error al obtener los libros:', error);
+            }
+        }
+
+        fetchBooks();
+    </script>
+
+</body>
+</html>
